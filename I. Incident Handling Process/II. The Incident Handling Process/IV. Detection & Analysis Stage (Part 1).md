@@ -1,5 +1,3 @@
-Here is the document with the content formatted in Markdown:
-
 # Detection & Analysis Stage (Part 1)
 
 At this point, we have created processes and procedures, and we have guidelines on how to act upon security incidents.
