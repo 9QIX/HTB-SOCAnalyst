@@ -6,7 +6,7 @@ Before we start talking about handling incidents, we need to understand the atta
 
 The cyber kill chain consists of seven (7) different stages, as depicted in the image below:
 
-![alt text](/Images/image.png)
+![alt text](../Images/image.png)
 
 1. **Recon**: The recon stage is the initial stage, and it involves the part where an attacker chooses their target. Additionally, the attacker then performs information gathering to become more familiar with the target and gathers as much useful data as possible, which can be used in not only this stage but also in other stages of this chain. Some attackers prefer to perform passive information gathering from web sources such as LinkedIn and Instagram but also from documentation on the target organization's web pages. Job ads and company partners often reveal information about the technology utilized in the target organization. They can provide extremely specific information about antivirus tools, operating systems, and networking technologies. Other attackers go a step further; they start 'poking' and actively scan external web applications and IP addresses that belong to the target organization.
 

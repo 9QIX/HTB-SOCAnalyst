@@ -6,7 +6,7 @@ Just like the cyber kill chain, there are different stages, when responding to a
 
 As defined by NIST, the incident handling process consists of the following four (4) distinct stages:
 
-![alt text](/Images/image.png)
+![alt text](../Images/image-1.png)
 
 1. **Preparation**
 2. **Detection & Analysis**
