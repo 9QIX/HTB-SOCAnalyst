@@ -4,13 +4,13 @@
 
 The Elastic stack, created by Elastic, is an open-source collection of mainly three applications (Elasticsearch, Logstash, and Kibana) that work in harmony to offer users comprehensive search and visualization capabilities for real-time analysis and exploration of log file sources.
 
-![alt text](image.png)
+![alt text](../Images/image.png)
 
 ## The Elastic Stack
 
 The high-level architecture of the Elastic stack can be enhanced in resource-intensive environments with the addition of Kafka, RabbitMQ, and Redis for buffering and resiliency, and nginx for security.
 
-![alt text](image-1.png)
+![alt text](../Images/image-1.png)
 
 ### Let's delve into each component of the Elastic stack.
 
@@ -28,11 +28,11 @@ The high-level architecture of the Elastic stack can be enhanced in resource-int
 
 **Beats -> Logstash -> Elasticsearch -> Kibana**
 
-![alt text](image-2.png)
+![alt text](../Images/image-2.png)
 
 **Beats -> Elasticsearch -> Kibana**
 
-![alt text](image-3.png)
+![alt text](../Images/image-3.png)
 
 ## The Elastic Stack As A SIEM Solution
 
@@ -44,7 +44,7 @@ To detect security-related incidents, Elasticsearch can be used to perform searc
 
 As Security Operations Center (SOC) analysts, we are likely to extensively use Kibana as our primary interface when working with the Elastic stack. Therefore, it is essential to become proficient with its functionalities and features.
 
-![alt text](image-4.png)
+![alt text](../Images/image-4.png)
 
 ## Kibana Query Language (KQL)
 
@@ -135,14 +135,14 @@ Using KQL's free text search we can search for "4625". In the returned records w
 
 - `@timestamp` typically contains the time extracted from the original event and it is different from `event.created`.
 
-![alt text](image-5.png)
+![alt text](../Images/image-5.png)
 
 **Free Text Search 1:**
 When it comes to disabled accounts, the aforementioned resource informs us that a SubStatus value of 0xC0000072 inside a 4625 Windows event log indicates that the account is currently disabled. Again using KQL's free text search we can search for "0xC0000072". By expanding the returned
 
 record we notice `winlog.event_data.SubStatus` that is related to Winlogbeat.
 
-![alt text](image-6.png)
+![alt text](../Images/image-6.png)
 
 **Free Text Search 2:**
 
