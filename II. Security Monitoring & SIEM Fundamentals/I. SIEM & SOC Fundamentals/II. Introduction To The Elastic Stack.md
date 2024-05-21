@@ -44,9 +44,7 @@ To detect security-related incidents, Elasticsearch can be used to perform searc
 
 As Security Operations Center (SOC) analysts, we are likely to extensively use Kibana as our primary interface when working with the Elastic stack. Therefore, it is essential to become proficient with its functionalities and features.
 
-```
-Beats -> Elasticsearch
-```
+![alt text](image-4.png)
 
 ## Kibana Query Language (KQL)
 
