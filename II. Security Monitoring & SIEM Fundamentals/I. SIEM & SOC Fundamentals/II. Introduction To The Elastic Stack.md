@@ -131,14 +131,18 @@ Using KQL's free text search we can search for "4625". In the returned records w
 - `event.code` is related to the Elastic Common Schema (ECS).
 - `winlog.event_id` is related to Winlogbeat.
 
-If the organization we work for is using the Elastic stack across all offices and security departments, it is preferred that we use the ECS fields in our queries for reasons that we will cover at the end of this section.
+- If the organization we work for is using the Elastic stack across all offices and security departments, it is preferred that we use the ECS fields in our queries for reasons that we will cover at the end of this section.
 
-`@timestamp` typically contains the time extracted from the original event and it is different from `event.created`.
+- `@timestamp` typically contains the time extracted from the original event and it is different from `event.created`.
+
+![alt text](image-5.png)
 
 **Free Text Search 1:**
 When it comes to disabled accounts, the aforementioned resource informs us that a SubStatus value of 0xC0000072 inside a 4625 Windows event log indicates that the account is currently disabled. Again using KQL's free text search we can search for "0xC0000072". By expanding the returned
 
 record we notice `winlog.event_data.SubStatus` that is related to Winlogbeat.
+
+![alt text](image-6.png)
 
 **Free Text Search 2:**
 
