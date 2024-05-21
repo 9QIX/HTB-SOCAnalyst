@@ -4,9 +4,13 @@
 
 The Elastic stack, created by Elastic, is an open-source collection of mainly three applications (Elasticsearch, Logstash, and Kibana) that work in harmony to offer users comprehensive search and visualization capabilities for real-time analysis and exploration of log file sources.
 
+![alt text](image.png)
+
 ## The Elastic Stack
 
 The high-level architecture of the Elastic stack can be enhanced in resource-intensive environments with the addition of Kafka, RabbitMQ, and Redis for buffering and resiliency, and nginx for security.
+
+![alt text](image-1.png)
 
 ### Let's delve into each component of the Elastic stack.
 
@@ -22,12 +26,13 @@ The high-level architecture of the Elastic stack can be enhanced in resource-int
 
 **Note:** Beats is an additional component of the Elastic stack. These lightweight, single-purpose data shippers are designed to be installed on remote machines to forward logs and metrics to either Logstash or Elasticsearch directly. Beats simplify the process of collecting data from various sources and ensure that the Elastic Stack receives the necessary information for analysis and visualization.
 
-```
-Beats -> Logstash -> Elasticsearch -> Kibana
-Beats -> Logstash
-Beats -> Elasticsearch -> Kibana
-Beats -> Elasticsearch
-```
+**Beats -> Logstash -> Elasticsearch -> Kibana**
+
+![alt text](image-2.png)
+
+**Beats -> Elasticsearch -> Kibana**
+
+![alt text](image-3.png)
 
 ## The Elastic Stack As A SIEM Solution
 
