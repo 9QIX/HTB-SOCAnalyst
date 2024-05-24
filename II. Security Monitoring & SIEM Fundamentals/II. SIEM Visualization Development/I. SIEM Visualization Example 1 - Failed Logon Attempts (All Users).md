@@ -12,15 +12,15 @@ Now, navigate to http://[Target IP]:5601, click on the side navigation toggle, a
 
 Delete the existing "SOC-Alerts" dashboard as follows.
 
-![Visualization 29](Visualization_29.png)
+![alt text](../Images/image-12.png)
 
 When visiting the Dashboard page again we will be presented with a message indicating that no dashboards currently exist. Additionally, there will be an option available to create a new Dashboard and its first visualization. To initiate the creation of our first dashboard, we simply have to click on the "Create new dashboard" button.
 
-![New Dashboard](New_Dashboard.png)
+![alt text](../Images/image-13.png)
 
 Now, to initiate the creation of our first visualization, we simply have to click on the "Create visualization" button.
 
-![New Visualization](New_Visualization.png)
+![alt text](../Images/image-14.png)
 
 Upon initiating the creation of our first visualization, the following new window will appear with various options and settings.
 
