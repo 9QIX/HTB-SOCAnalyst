@@ -4,6 +4,8 @@
 
 Utilizing SIEM use cases is a fundamental aspect of crafting a robust cybersecurity strategy, as they enable the effective identification and detection of potential security incidents. Use cases are designed to illustrate specific situations where a product or service can be applied, and they can range from general scenarios, such as failed login attempts, to more complex ones like detecting a ransomware outbreak.
 
+![alt text](../Images/image-8.png)
+
 ### Use Case 1
 
 For instance, consider a situation where a user named Rob experiences 10 consecutive failed authentication attempts. These events could originate from the actual user who forgot their credentials or from a malicious actor trying to brute force their way into the account. In either case, these 10 events are sent to the SIEM system, which then correlates them into a single event and triggers an alert to the SOC team under the "brute force" use case category.
@@ -14,7 +16,7 @@ Based on the log data generated within the SIEM, the SOC team is then responsibl
 
 The following critical stages must be considered when developing any use cases:
 
-![Use Case Dev Lifecycle](https://i.imgur.com/undefined.png)
+![alt text](../Images/image-9.png)
 
 1. **Requirements**: Comprehend the purpose or necessity of the use case, pinpointing the specific scenario for which an alert or notification is needed. Requirements can be proposed by customers, analysts, or employees. For instance, the goal might be to design a detection use case for a brute force attack that triggers an alert after 10 consecutive login failures within 4 minutes.
 
