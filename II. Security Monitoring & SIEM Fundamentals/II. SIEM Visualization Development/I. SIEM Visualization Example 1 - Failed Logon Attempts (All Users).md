@@ -80,11 +80,11 @@ Now we can see three columns in the table, which contain the following informati
 
 Finally, click on "Save and return", and you will observe that the new visualization is added to the dashboard, appearing as shown in the following image.
 
-![Visualization 13](Visualization_13.png)
+![alt text](../Images/image-25.png)
 
 Let's not forget to save the dashboard as well. We can do so by simply clicking on the "Save" button.
 
-![Visualization 15](Visualization_15.png)
+![alt text](../Images/image-26.png)
 
 ## Refining The Visualization
 
