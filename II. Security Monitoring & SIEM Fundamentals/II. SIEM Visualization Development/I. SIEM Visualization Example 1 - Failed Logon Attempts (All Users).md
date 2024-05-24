@@ -58,19 +58,19 @@ Note: You will notice Rank by Alphabetical and not Rank by Count of records like
 
 Moving forward, let's close the "Rows" window and proceed to enter the "Metrics" configuration.
 
-![Visualization 7](Visualization_7.png)
+![alt text](../Images/image-21.png)
 
 In the "Metrics" window, let's select "count" as the desired metric.
 
-![Visualization 8](Visualization_8.png)
+![alt text](../Images/image-22.png)
 
 As soon as we select "Count" as the metric, we will observe that the table gets populated with data (assuming that there are events present in the selected data set)
 
-![Visualization 9](Visualization_9.png)
+![alt text](../Images/image-23.png)
 
 One final addition to the table is to include another "Rows" setting to show the machine where the failed logon attempt occurred. To do this, we will select the host.hostname.keyword field, which represents the computer reporting the failed logon attempt. This will allow us to display the hostname or machine name alongside the count of failed logon attempts, as shown in the image.
 
-![Visualization 12](Visualization_12.png)
+![alt text](../Images/image-24.png)
 
 Now we can see three columns in the table, which contain the following information:
 
