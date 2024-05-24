@@ -154,3 +154,5 @@ Finally, let's give our visualization a title by clicking on "No Title".
 ![Visualization 36](Visualization_36.png)
 
 Don't forget to click on the "Save" button (the one on the upper-right hand side of the window).
+
+> Please allow 3-5 minutes for Kibana to become available after spawning the target of the questions below.
