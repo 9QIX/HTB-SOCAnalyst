@@ -49,6 +49,8 @@ The following critical stages must be considered when developing any use cases:
 
 Now, let's explore a practical example using the Elastic stack as a SIEM solution to help understand how to map each of the above points.
 
+![alt text](../Images/image-10.png)
+
 ### Use Case Dev Lifecycle
 
 In the provided snapshot (detection use case), we need to determine our risk and the target of our monitoring efforts.
@@ -84,6 +86,8 @@ For rule fine-tuning, it is essential to understand the conditions that may trig
 ## Example 2 (MSBuild Making Network Connections)
 
 Example 1 discussed a high-severity detection use case and rule. Now, let's examine a medium-severity use case using a SIEM solution to better understand how each pointer contributes to the effectiveness of use cases.
+
+![alt text](../Images/image-11.png)
 
 ### Use Case Dev Lifecycle
 
