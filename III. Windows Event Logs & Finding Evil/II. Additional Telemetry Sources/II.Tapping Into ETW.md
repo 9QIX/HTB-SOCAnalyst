@@ -28,10 +28,8 @@ Due to the parent PID spoofing technique we employed, Sysmon Event 1 incorrectly
 As we have previously discussed, although Sysmon and event logs provide valuable telemetry for hunting and creating alert rules, they are not the only sources of information. Let's begin by collecting data from the Microsoft-Windows-Kernel-Process provider using SilkETW (the provider can be identified using `logman.exe query providers | findstr "Process"`). After that, we can proceed to simulate the attack again to assess whether ETW can provide us with more accurate information regarding the execution of cmd.exe.
 
 ```
-
 Tapping Into ETW
 c:\Tools\SilkETW_SilkService_v8\v8\SilkETW>SilkETW.exe -t user -pn Microsoft-Windows-Kernel-Process -ot file -p C:\windows\temp\etw.json
-
 ```
 
 ![alt text](../Images/image-8.png)
@@ -113,8 +111,8 @@ Current Token's Privileges
 
 Assuming we have Sysmon configured appropriately to log image loading events (Event ID 7), executing 'Seatbelt.exe' would trigger the loading of key .NET-related DLLs such as 'clr.dll' and 'mscoree.dll'. Sysmon, keenly observing system activities, will log these DLL load operations as Event ID 7 records.
 
-![Sysmon Event ID 7](sysmon-event-id-7-1.png)
-![Sysmon Event ID 7](sysmon-event-id-7-2.png)
+![alt text](../Images/image-10.png)
+![alt text](../Images/image-11.png)
 
 As already mentioned, relying solely on Sysmon Event ID 7 for detecting attacks can be challenging due to the large volume of events it generates (especially if not configured properly). Additionally, while it informs us about the DLLs being loaded, it doesn't provide granular details about the actual content of the loaded .NET assembly.
 
@@ -128,7 +126,7 @@ c:\Tools\SilkETW_SilkService_v8\v8\SilkETW>SilkETW.exe -t user -pn Microsoft-Win
 
 The etw.json file (that includes data from the Microsoft-Windows-DotNETRuntime provider) seems to contain a wealth of information about the loaded assembly, including method names.
 
-![ETW JSON Output](etw-json-output-2.png)
+![alt text](../Images/image-12.png)
 
 It's worth noting that in our current SilkETW configuration, we're not capturing the entirety of events from the "Microsoft-Windows-DotNETRuntime" provider. Instead, we're selectively targeting a specific subset (indicated by 0x2038), which includes:
 
