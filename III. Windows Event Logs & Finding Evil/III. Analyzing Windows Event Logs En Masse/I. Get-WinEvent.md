@@ -177,3 +177,11 @@ Then, RDP to [Target IP] using the provided credentials and answer the question 
 Get-WinEvent
 z0x9n@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v:[Target IP] /dynamic-resolution
 ```
+
+## Questions
+
+1.  Utilize the Get-WinEvent cmdlet to traverse all event logs located within the "C:\Tools\chainsaw\EVTX-ATTACK-SAMPLES\Lateral Movement" directory and determine when the \\\*\PRINT share was added. Enter the time of the identified event in the format HH:MM:SS as your answer.
+
+    ```pwsh
+    Get-WinEvent -Path ‘C:\Tools\chainsaw\EVTX-ATTACK-SAMPLES\Lateral Movement*.evtx’ -FilterXPath “[EventData[Data and (Data='\\PRINT’)]]”
+    ```
