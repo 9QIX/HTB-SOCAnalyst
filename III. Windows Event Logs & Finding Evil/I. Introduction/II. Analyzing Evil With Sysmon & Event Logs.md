@@ -172,8 +172,12 @@ z0x9n@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v
 
 1.  Replicate the DLL hijacking attack described in this section and provide the SHA256 hash of the malicious WININET.dll as your answer. "C:\Tools\Sysmon" and "C:\Tools\Reflective DLLInjection" on the spawned target contain everything you need
 
-- Answer: Let’s attempt the hijack using “calc.exe” and “WININET.dll” as an example. To simplify the process, we can utilize Stephen Fewer’s “hello world” reflective DLL 2. It should be noted that DLL hijacking does not require reflective DLLs.
+- Let’s attempt the hijack using “calc.exe” and “WININET.dll” as an example. To simplify the process, we can utilize Stephen Fewer’s “hello world” reflective DLL 2. It should be noted that DLL hijacking does not require reflective DLLs.
 
 - By following the required steps, which involve renaming reflective_dll.x64.dll to WININET.dll, moving calc.exe from C:\Windows\System32 along with WININET.dll to a writable directory (such as the Desktop folder), and executing calc.exe, we achieve success. Instead of the Calculator application, a MessageBox is displayed.
 
 - Filter Event ID 7 and find calc.exe
+
+```
+SHA256: 51F2305DCF385056C68F7CCF5B1B3B9304865CEF1257947D4AD6EF5FAD2E3B13
+```
