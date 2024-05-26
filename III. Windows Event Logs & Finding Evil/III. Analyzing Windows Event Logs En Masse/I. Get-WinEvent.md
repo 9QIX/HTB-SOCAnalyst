@@ -177,7 +177,3 @@ Then, RDP to [Target IP] using the provided credentials and answer the question 
 Get-WinEvent
 z0x9n@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v:[Target IP] /dynamic-resolution
 ```
-
-```
-
-```
