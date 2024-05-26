@@ -14,19 +14,11 @@ z0x9n@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB\_@cad3my_lab_W1n10_r00t!@0' /
 
 Answer the question(s) below to complete this Section and earn cubes!
 
-## Target: Click here to spawn the target system!
-
-RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
-
 ### Question 1
 
 +3 By examining the logs located in the `C:\Logs\DLLHijack` directory, determine the process responsible for executing a DLL hijacking attack. Enter the process name as your answer.
 
 **Answer format:** `_.exe`
-
-Submit your answer here...
-
-+10 Streak pts
 
 ### Question 2
 
@@ -36,10 +28,6 @@ RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
 
 **Answer format:** `_.exe`
 
-Submit your answer here...
-
-+10 Streak pts
-
 ### Question 3
 
 RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
@@ -47,10 +35,6 @@ RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
 +3 By examining the logs located in the `C:\Logs\PowershellExec` directory, determine the process that injected into the process that executed unmanaged PowerShell code. Enter the process name as your answer.
 
 **Answer format:** `_.exe`
-
-Submit your answer here...
-
-+10 Streak pts
 
 ### Question 4
 
@@ -60,10 +44,6 @@ RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
 
 **Answer format:** `_.exe`
 
-Submit your answer here...
-
-+10 Streak pts
-
 ### Question 5
 
 RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
@@ -72,10 +52,6 @@ RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
 
 **Answer format:** Yes or No
 
-Submit your answer here...
-
-+10 Streak pts
-
 ### Question 6
 
 RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
@@ -83,5 +59,3 @@ RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
 +2 By examining the logs located in the `C:\Logs\StrangePPID` directory, determine a process that was used to temporarily execute code based on a strange parent-child relationship. Enter the process name as your answer.
 
 **Answer format:** `_.exe`
-
-Submit your answer here...
