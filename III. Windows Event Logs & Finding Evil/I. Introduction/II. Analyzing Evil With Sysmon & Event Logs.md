@@ -170,8 +170,6 @@ z0x9n@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v
 
 ## Questions
 
-Sure! Here's a step-by-step explanation for each scenario:
-
 ### Scenario 1: DLL Hijacking Attack
 
 **Objective:** Replicate the DLL hijacking attack and provide the SHA256 hash of the malicious `WININET.dll`.
@@ -303,5 +301,3 @@ SHA256: 8A3CD3CF2249E9971806B15C75A892E6A44CCA5FF5EA5CA89FDA951CD2C09AA9
 ```
 NTLM: 5e4ffd54b3849aa720ed39f50185e533
 ```
-
-By following these steps carefully, you should be able to replicate each attack scenario and retrieve the required hashes.
