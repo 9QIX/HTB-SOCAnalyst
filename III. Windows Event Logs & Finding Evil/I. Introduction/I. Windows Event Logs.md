@@ -137,6 +137,18 @@ Now, RDP to [Target IP] using the provided credentials, open Windows Event Viewe
    <QueryList>
    <Query Id="0" Path="Security">
        <Select Path="Security">
+       *[System[EventID=4624] and System[TimeCreated[@SystemTime='2022-08-03T17:23:25.000Z']]]
+       </Select>
+   </Query>
+   </QueryList>
+   ```
+
+   Examine services.exe
+
+   ```xml
+   <QueryList>
+   <Query Id="0" Path="Security">
+       <Select Path="Security">
        *[System[EventID=4907] and System[TimeCreated[@SystemTime='2022-08-03T17:23:49.000Z']]]
        </Select>
    </Query>
