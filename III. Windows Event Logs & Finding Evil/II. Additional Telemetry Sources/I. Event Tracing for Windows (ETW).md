@@ -342,15 +342,15 @@ GUI-based alternatives also exist. These are:
 
 Using the graphical interface of the Performance Monitor tool, we can visualize various running trace sessions. A detailed overview of a specific trace can be accessed simply by double-clicking on it. This reveals all pertinent data related to the trace, from the engaged providers and their activated features to the nature of the trace itself. Additionally, these sessions can be modified to suit our needs by incorporating or eliminating providers. Lastly, we can devise new sessions by opting for the "User Defined" category.
 
-![alt text](image-1.png)
+![alt text](../Images/image-1.png)
 
-![alt text](image-2.png)
+![alt text](../Images/image-2.png)
 
 ETW Provider metadata can also be viewed through the EtwExplorer project.
 
-![alt text](image-3.png)
+![alt text](../Images/image-3.png)
 
-![alt text](image-4.png)
+![alt text](../Images/image-4.png)
 
 ## Useful Providers
 
