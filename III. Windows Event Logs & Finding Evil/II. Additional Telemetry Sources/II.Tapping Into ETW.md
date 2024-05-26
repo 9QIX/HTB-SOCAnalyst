@@ -65,22 +65,90 @@ Monitoring the loading of such libraries can help reveal attempts to execute .NE
 
 For demonstrative purposes, let's emulate a malicious .NET assembly load by executing a precompiled version of Seatbelt that resides on disk. Seatbelt is a well-known .NET assembly, often employed by adversaries who load and execute it in memory to gain situational awareness on a compromised system.
 
-```
-
-Tapping Into ETW
+```pwsh
 PS C:\Tools\GhostPack Compiled Binaries>.\Seatbelt.exe TokenPrivileges
 
                         %&&@@@&&
                         &&&&&&&%%%,                       #&&@@@@@@%%%%%%###############%
                         &%&   %&%%                        &////(((&%%%%%#%################//((((###%%%%%%%%%%%%%%%
+%%%%%%%%%%%######%%%#%%####%  &%%**#                      @////(((&%%%%%%######################(((((((((((((((((((
+#%#%%%%%%%#######%#%%#######  %&%,,,,,,,,,,,,,,,,         @////(((&%%%%%#%#####################(((((((((((((((((((
+#%#%%%%%%#####%%#%#%%#######  %%%,,,,,,  ,,.   ,,         @////(((&%%%%%%%######################(#(((#(#((((((((((
+#####%%%####################  &%%......  ...   ..         @////(((&%%%%%%%###############%######((#(#(####((((((((
+#######%##########%#########  %%%......  ...   ..         @////(((&%%%%%#########################(#(#######((#####
+###%##%%####################  &%%...............          @////(((&%%%%%%%%##############%#######(#########((#####
+#####%######################  %%%..                       @////(((&%%%%%%%################
+                        &%&   %%%%%      Seatbelt         %////(((&%%%%%%%%#############*
+                        &%%&&&%%%%%        v1.2.1         ,(((&%%%%%%%%%%%%%%%%%,
+                         #%%%%##,
 
-%%%%%%%%%%%######%%%#%%####% &%%\*_# @////(((&%%%%%%######################(((((((((((((((((((
-#%#%%%%%%%#######%#%%####### %&%,,,,,,,,,,,,,,,, @////(((&%%%%%#%#####################(((((((((((((((((((
-#%#%%%%%%#####%%#%#%%####### %%%,,,,,, ,,. ,, @////(((&%%%%%%%######################(#(((#(#((((((((((
-#####%%%#################### &%%...... ... .. @////(((&%%%%%%%###############%######((#(#(####((((((((
-#######%##########%######### %%%...... ... .. @////(((&%%%%%#########################(#(#######((#####
-###%##%%#################### &%%............... @////(((&%%%%%%%%##############%#######(#########((#####
-#####%###################### %%%.. @////(((&%%%%%%%################
-&%& %%%%% Seatbelt %////(((&%%%%%%%%#############_
-&%%&&&%%%%%
+
+====== TokenPrivileges ======
+
+Current Token's Privileges
+
+                     SeIncreaseQuotaPrivilege:  DISABLED
+                          SeSecurityPrivilege:  DISABLED
+                     SeTakeOwnershipPrivilege:  DISABLED
+                        SeLoadDriverPrivilege:  DISABLED
+                     SeSystemProfilePrivilege:  DISABLED
+                        SeSystemtimePrivilege:  DISABLED
+              SeProfileSingleProcessPrivilege:  DISABLED
+              SeIncreaseBasePriorityPrivilege:  DISABLED
+                    SeCreatePagefilePrivilege:  DISABLED
+                            SeBackupPrivilege:  DISABLED
+                           SeRestorePrivilege:  DISABLED
+                          SeShutdownPrivilege:  DISABLED
+                             SeDebugPrivilege:  SE_PRIVILEGE_ENABLED
+                 SeSystemEnvironmentPrivilege:  DISABLED
+                      SeChangeNotifyPrivilege:  SE_PRIVILEGE_ENABLED_BY_DEFAULT, SE_PRIVILEGE_ENABLED
+                    SeRemoteShutdownPrivilege:  DISABLED
+                            SeUndockPrivilege:  DISABLED
+                      SeManageVolumePrivilege:  DISABLED
+                       SeImpersonatePrivilege:  SE_PRIVILEGE_ENABLED_BY_DEFAULT, SE_PRIVILEGE_ENABLED
+                      SeCreateGlobalPrivilege:  SE_PRIVILEGE_ENABLED_BY_DEFAULT, SE_PRIVILEGE_ENABLED
+                SeIncreaseWorkingSetPrivilege:  DISABLED
+                          SeTimeZonePrivilege:  DISABLED
+                SeCreateSymbolicLinkPrivilege:  DISABLED
+    SeDelegateSessionUserImpersonatePrivilege:  DISABLED
+```
+
+Assuming we have Sysmon configured appropriately to log image loading events (Event ID 7), executing 'Seatbelt.exe' would trigger the loading of key .NET-related DLLs such as 'clr.dll' and 'mscoree.dll'. Sysmon, keenly observing system activities, will log these DLL load operations as Event ID 7 records.
+
+![Sysmon Event ID 7](sysmon-event-id-7-1.png)
+![Sysmon Event ID 7](sysmon-event-id-7-2.png)
+
+As already mentioned, relying solely on Sysmon Event ID 7 for detecting attacks can be challenging due to the large volume of events it generates (especially if not configured properly). Additionally, while it informs us about the DLLs being loaded, it doesn't provide granular details about the actual content of the loaded .NET assembly.
+
+To augment our visibility and gain deeper insights into the actual assembly being loaded, we can again leverage Event Tracing for Windows (ETW) and specifically the Microsoft-Windows-DotNETRuntime provider.
+
+Let's use SilkETW to collect data from the Microsoft-Windows-DotNETRuntime provider. After that, we can proceed to simulate the attack again to evaluate whether ETW can furnish us with more detailed and actionable intelligence regarding the loading and execution of the 'Seatbelt' .NET assembly.
+
+```
+  Tapping Into ETW
+c:\Tools\SilkETW_SilkService_v8\v8\SilkETW>SilkETW.exe -t user -pn Microsoft-Windows-DotNETRuntime -uk 0x2038 -ot file -p C:\windows\temp\etw.json
+```
+
+The etw.json file (that includes data from the Microsoft-Windows-DotNETRuntime provider) seems to contain a wealth of information about the loaded assembly, including method names.
+
+![ETW JSON Output](etw-json-output-2.png)
+
+It's worth noting that in our current SilkETW configuration, we're not capturing the entirety of events from the "Microsoft-Windows-DotNETRuntime" provider. Instead, we're selectively targeting a specific subset (indicated by 0x2038), which includes:
+
+- JitKeyword: Relates to the Just-In-Time (JIT) compilation events, providing information on the methods being compiled at runtime. This could be particularly useful for understanding the execution flow of the .NET assembly.
+- InteropKeyword: Refers to Interoperability events, which come into play when managed code interacts with unmanaged code. These events could provide insights into potential interactions with native APIs or other unmanaged components.
+- LoaderKeyword: Events provide details on the assembly loading process within the .NET runtime, which can be vital for understanding what .NET assemblies are being loaded and potentially executed.
+- NGenKeyword: Corresponds to Native Image Generator (NGen) events, which are concerned with the creation and usage of precompiled .NET assemblies. Monitoring these could help detect scenarios where attackers use precompiled .NET assemblies to evade JIT-related detections.
+
+This [blog post](https://repo.zenk-security.com/Privesc/Readme.md#detecting-malicious-net-assemblies) provides valuable perspectives on SilkETW as well as the identification of malware based on .NET.
+
+## Practical Exercise
+
+Navigate to the bottom of this section and click on Click here to spawn the target system!
+
+Then, RDP to [Target IP] using the provided credentials and answer the question below.
+
+```
+  Tapping Into ETW
+z0x9n@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v:[Target IP] /dynamic-resolution
 ```
