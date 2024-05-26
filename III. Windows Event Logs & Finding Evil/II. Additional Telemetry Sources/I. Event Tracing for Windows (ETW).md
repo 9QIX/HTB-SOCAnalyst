@@ -268,5 +268,103 @@ Microsoft-AppV-Client                    {E4F68870-5AE8-4E5B-9CE7-CA9ED75B0245}
 Microsoft-AppV-Client-StreamingUX        {28CB46C7-4003-4E50-8BD9-442086762D12}
 Microsoft-AppV-ServiceLog                {9CC69D1C-7917-4ACD-8066-6BF8B63E551B}
 Microsoft-AppV-SharedPerformance         {FB4A19EE-EB5A-47A4-BC52-E71AAC6D0859}
-Microsoft-Client-Licensing-Platform      {B6CC0D55-9E
+Microsoft-Gaming-Services                {BC1BDB57-71A2-581A-147B-E0B49474A2D4}
+Microsoft-IE                             {9E3B3947-CA5D-4614-91A2-7B624E0E7244}
+Microsoft-IE-JSDumpHeap                  {7F8E35CA-68E8-41B9-86FE-D6ADC5B327E7}
+Microsoft-IEFRAME                        {5C8BB950-959E-4309-8908-67961A1205D5}
+Microsoft-JScript                        {57277741-3638-4A4B-BDBA-0AC6E45DA56C}
+Microsoft-OneCore-OnlineSetup            {41862974-DA3B-4F0B-97D5-BB29FBB9B71E}
+Microsoft-PerfTrack-IEFRAME              {B2A40F1F-A05A-4DFD-886A-4C4F18C4334C}
+Microsoft-PerfTrack-MSHTML               {FFDB9886-80F3-4540-AA8B-B85192217DDF}
+Microsoft-User Experience Virtualization-Admin {61BC445E-7A8D-420E-AB36-9C7143881B98}
+Microsoft-User Experience Virtualization-Agent Driver {DE29CF61-5EE6-43FF-9AAC-959C4E13CC6C}
+Microsoft-User Experience Virtualization-App Agent {1ED6976A-4171-4764-B415-7EA08BC46C51}
+Microsoft-User Experience Virtualization-IPC {21D79DB0-8E03-41CD-9589-F3EF7001A92A}
+Microsoft-User Experience Virtualization-SQM Uploader {57003E21-269B-4BDC-8434-B3BF8D57D2D5}
+Microsoft-Windows Networking VPN Plugin Platform {E5FC4A0F-7198-492F-9B0F-88FDCBFDED48}
+Microsoft-Windows-AAD                    {4DE9BC9C-B27A-43C9-8994-0915F1A5E24F}
+Microsoft-Windows-ACL-UI                 {EA4CC8B8-A150-47A3-AFB9-C8D194B19452}
+
+The command completed successfully.
 ```
+
+Windows 10 includes more than 1,000 built-in providers. Moreover, Third-Party Software often incorporates its own ETW providers, especially those operating in Kernel mode.
+
+Due to the high number of providers, it's usually advantageous to filter them using findstr. For instance, you will see multiple results for "Winlogon" in the given example.
+
+```
+  Event Tracing for Windows (ETW)
+C:\Tools> logman.exe query providers | findstr "Winlogon"
+Microsoft-Windows-Winlogon               {DBE9B383-7CF3-4331-91CC-A3CB16A3B538}
+Windows Winlogon Trace                   {D451642C-63A6-11D7-9720-00B0D03E0347}
+```
+
+By specifying a provider with Logman, we gain a deeper understanding of the provider's function. This will inform us about the Keywords we can filter on, the available event levels, and which processes are currently utilizing the provider.
+
+```
+  Event Tracing for Windows (ETW)
+C:\Tools> logman.exe query providers Microsoft-Windows-Winlogon
+
+Provider                                 GUID
+-------------------------------------------------------------------------------
+Microsoft-Windows-Winlogon               {DBE9B383-7CF3-4331-91CC-A3CB16A3B538}
+
+Value               Keyword              Description
+-------------------------------------------------------------------------------
+0x0000000000010000  PerfInstrumentation
+0x0000000000020000  PerfDiagnostics
+0x0000000000040000  NotificationEvents
+0x0000000000080000  PerfTrackContext
+0x0000100000000000  ms:ReservedKeyword44
+0x0000200000000000  ms:Telemetry
+0x0000400000000000  ms:Measures
+0x0000800000000000  ms:CriticalData
+0x0001000000000000  win:ResponseTime     Response Time
+0x0080000000000000  win:EventlogClassic  Classic
+0x8000000000000000  Microsoft-Windows-Winlogon/Diagnostic
+0x4000000000000000  Microsoft-Windows-Winlogon/Operational
+0x2000000000000000  System               System
+
+Value               Level                Description
+-------------------------------------------------------------------------------
+0x02                win:Error            Error
+0x03                win:Warning          Warning
+0x04                win:Informational    Information
+
+PID                 Image
+-------------------------------------------------------------------------------
+0x00001710
+0x0000025c
+
+
+The command completed successfully.
+```
+
+The Microsoft-Windows-Winlogon/Diagnostic and Microsoft-Windows-Winlogon/Operational keywords reference the event logs generated from this provider.
+
+GUI-based alternatives also exist. These are:
+
+Using the graphical interface of the Performance Monitor tool, we can visualize various running trace sessions. A detailed overview of a specific trace can be accessed simply by double-clicking on it. This reveals all pertinent data related to the trace, from the engaged providers and their activated features to the nature of the trace itself. Additionally, these sessions can be modified to suit our needs by incorporating or eliminating providers. Lastly, we can devise new sessions by opting for the "User Defined" category.
+
+![Performance Monitor](image1.jpg)
+
+![Performance Monitor](image2.jpg)
+
+ETW Provider metadata can also be viewed through the EtwExplorer project.
+
+![EtwExplorer](image3.jpg)
+
+## Useful Providers
+
+- **Microsoft-Windows-Kernel-Process**: This ETW provider is instrumental in monitoring process-related activity within the Windows kernel. It can aid in detecting unusual process behaviors such as process injection, process hollowing, and other tactics commonly used by malware and advanced persistent threats (APTs).
+- **Microsoft-Windows-Kernel-File**: As the name suggests, this provider focuses on file-related operations. It can be employed for detection scenarios involving unauthorized file access, changes to critical system files, or suspicious file operations indicative of exfiltration or ransomware activity.
+- **Microsoft-Windows-Kernel-Network**: This ETW provider offers visibility into network-related activity at the kernel level. It's especially useful in detecting network-based attacks such as data exfiltration, unauthorized network connections, and potential signs of command and control (C2) communication.
+- **Microsoft-Windows-SMBClient/SMBServer**: These providers monitor Server Message Block (SMB) client and server activity, providing insights into file sharing and network communication. They can be used to detect unusual SMB traffic patterns, potentially indicating lateral movement or data exfiltration.
+- **Microsoft-Windows-DotNETRuntime**: This provider focuses on .NET runtime events, making it ideal for identifying anomalies in .NET application execution, potential exploitation of .NET vulnerabilities, or malicious .NET assembly loading.
+- **OpenSSH**: Monitoring the OpenSSH ETW provider can provide important insights into Secure Shell (SSH) connection attempts, successful and failed authentications, and potential brute force attacks.
+- **Microsoft-Windows-VPN-Client**: This provider enables tracking of Virtual Private Network (VPN) client events. It can be useful for identifying unauthorized or suspicious VPN connections.
+- **Microsoft-Windows-PowerShell**: This ETW provider tracks PowerShell execution and command activity, making it invaluable for detecting suspicious PowerShell usage, script block logging, and potential misuse or exploitation.
+- **Microsoft-Windows-Kernel-Registry**: This provider monitors registry operations, making it useful for detection scenarios related to changes in registry keys, often associated with persistence mechanisms, malware installation, or system configuration changes.
+- **Microsoft-Windows-CodeIntegrity**: This provider monitors code and driver integrity checks, which can be key in identifying attempts to load unsigned or malicious drivers or code.
+- **Microsoft-Antimalware-Service**: This ETW provider can be employed to detect potential issues with the antimalware service, including disabled services, configuration changes, or potential evasion techniques employed by malware.
+- **WinRM**: Monitoring the Windows Remote Management (WinRM) provider can reveal unauthorized or suspicious remote management activity, often indicative of lateral movement or
