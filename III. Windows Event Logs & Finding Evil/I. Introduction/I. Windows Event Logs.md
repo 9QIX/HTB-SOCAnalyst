@@ -133,16 +133,24 @@ Now, RDP to [Target IP] using the provided credentials, open Windows Event Viewe
 
 1. Analyze the event with ID 4624, that took place on 8/3/2022 at 10:23:25. Conduct a similar investigation as outlined in this section and provide the name of the executable responsible for the modification of the auditing settings as your answer. Answer format: T_W**\_**.exe
 
-   - Filter
+   ```xml
+   <QueryList>
+   <Query Id="0" Path="Security">
+       <Select Path="Security">
+       *[System[EventID=4907] and System[TimeCreated[@SystemTime='2022-08-03T17:23:49.000Z']]]
+       </Select>
+   </Query>
+   </QueryList>
+   ```
 
 2. Build an XML query to determine if the previously mentioned executable modified the auditing settings of C:\Windows\Microsoft.NET\Framework64\v4.0.30319\WPF\wpfgfx_v0400.dll. Enter the time of the identified event in the format HH:MM:SS as your answer.
 
-```xml
-<QueryList>
-  <Query Id="0" Path="Security">
-    <Select Path="Security">
-      *[EventData[Data and (Data='C:\Windows\Microsoft.NET\Framework64\v4.0.30319\WPF\wpfgfx_v0400.dll')]]
-    </Select>
-  </Query>
-</QueryList>
-```
+   ```xml
+   <QueryList>
+   <Query Id="0" Path="Security">
+       <Select Path="Security">
+       *[EventData[Data and (Data='C:\Windows\Microsoft.NET\Framework64\v4.0.30319\WPF\wpfgfx_v0400.dll')]]
+       </Select>
+   </Query>
+   </QueryList>
+   ```
