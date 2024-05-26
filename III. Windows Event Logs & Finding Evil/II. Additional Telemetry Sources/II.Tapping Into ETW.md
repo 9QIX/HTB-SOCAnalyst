@@ -6,24 +6,22 @@ Abnormal parent-child relationships among processes can be indicative of malicio
 
 By utilizing Process Hacker, we can explore parent-child relationships within Windows. Sorting the processes by dropdowns in the Processes view reveals a hierarchical representation of the relationships.
 
-![Process Hacker Processes View](process-hacker-processes-view.png)
+![alt text](../Images/image-5.png)
 
 Analyzing these relationships in standard and custom environments enables us to identify deviations from normal patterns. For example, if we observe the "spoolsv.exe" process creating "whoami.exe" instead of its expected behavior of creating a "conhost", it raises suspicion.
 
-![Strange Parent-Child Relationship](strange-parent-child-relationship.png)
+![alt text](../Images/image-6.png)
 
 To showcase a strange parent-child relationship, where "cmd.exe" appears to be created by "spoolsv.exe" with no accompanying arguments, we will utilize an attacking technique called Parent PID Spoofing. Parent PID Spoofing can be executed through the psgetsystem project in the following manner.
 
 ```
-
 Tapping Into ETW
 PS C:\Tools\psgetsystem> powershell -ep bypass
 PS C:\Tools\psgetsystem> Import-Module .\psgetsys.ps1
 PS C:\Tools\psgetsystem> [MyProcess]::CreateProcessFromParent([Process ID of spoolsv.exe],"C:\Windows\System32\cmd.exe","")
-
 ```
 
-![Parent PID Spoofing](parent-pid-spoofing.png)
+![alt text](../Images/image-7.png)
 
 Due to the parent PID spoofing technique we employed, Sysmon Event 1 incorrectly displays spoolsv.exe as the parent of cmd.exe. However, it was actually powershell.exe that created cmd.exe.
 
@@ -36,11 +34,11 @@ c:\Tools\SilkETW_SilkService_v8\v8\SilkETW>SilkETW.exe -t user -pn Microsoft-Win
 
 ```
 
-![SilkETW Capture](silketw-capture.png)
+![alt text](../Images/image-8.png)
 
 The etw.json file (that includes data from the Microsoft-Windows-Kernel-Process provider) seems to contain information about powershell.exe being the one who created cmd.exe.
 
-![ETW JSON Output](etw-json-output.png)
+![alt text](../Images/image-9.png)
 
 It should be noted that SilkETW event logs can be ingested and viewed by Windows Event Viewer through SilkService to provide us with deeper and more extensive visibility into the actions performed on a system.
 
