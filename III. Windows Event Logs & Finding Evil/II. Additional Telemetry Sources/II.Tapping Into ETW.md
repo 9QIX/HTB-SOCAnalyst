@@ -124,8 +124,7 @@ To augment our visibility and gain deeper insights into the actual assembly bein
 
 Let's use SilkETW to collect data from the Microsoft-Windows-DotNETRuntime provider. After that, we can proceed to simulate the attack again to evaluate whether ETW can furnish us with more detailed and actionable intelligence regarding the loading and execution of the 'Seatbelt' .NET assembly.
 
-```
-  Tapping Into ETW
+```pwsh
 c:\Tools\SilkETW_SilkService_v8\v8\SilkETW>SilkETW.exe -t user -pn Microsoft-Windows-DotNETRuntime -uk 0x2038 -ot file -p C:\windows\temp\etw.json
 ```
 
@@ -148,7 +147,6 @@ Navigate to the bottom of this section and click on Click here to spawn the targ
 
 Then, RDP to [Target IP] using the provided credentials and answer the question below.
 
-```
-  Tapping Into ETW
+```pwsh
 z0x9n@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v:[Target IP] /dynamic-resolution
 ```
