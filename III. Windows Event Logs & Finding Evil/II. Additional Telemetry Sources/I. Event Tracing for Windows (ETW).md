@@ -290,8 +290,7 @@ Windows 10 includes more than 1,000 built-in providers. Moreover, Third-Party So
 
 Due to the high number of providers, it's usually advantageous to filter them using findstr. For instance, you will see multiple results for "Winlogon" in the given example.
 
-```
-  Event Tracing for Windows (ETW)
+```pwsh
 C:\Tools> logman.exe query providers | findstr "Winlogon"
 Microsoft-Windows-Winlogon               {DBE9B383-7CF3-4331-91CC-A3CB16A3B538}
 Windows Winlogon Trace                   {D451642C-63A6-11D7-9720-00B0D03E0347}
@@ -299,8 +298,7 @@ Windows Winlogon Trace                   {D451642C-63A6-11D7-9720-00B0D03E0347}
 
 By specifying a provider with Logman, we gain a deeper understanding of the provider's function. This will inform us about the Keywords we can filter on, the available event levels, and which processes are currently utilizing the provider.
 
-```
-  Event Tracing for Windows (ETW)
+```pwsh
 C:\Tools> logman.exe query providers Microsoft-Windows-Winlogon
 
 Provider                                 GUID
@@ -344,13 +342,15 @@ GUI-based alternatives also exist. These are:
 
 Using the graphical interface of the Performance Monitor tool, we can visualize various running trace sessions. A detailed overview of a specific trace can be accessed simply by double-clicking on it. This reveals all pertinent data related to the trace, from the engaged providers and their activated features to the nature of the trace itself. Additionally, these sessions can be modified to suit our needs by incorporating or eliminating providers. Lastly, we can devise new sessions by opting for the "User Defined" category.
 
-![Performance Monitor](image1.jpg)
+![alt text](image-1.png)
 
-![Performance Monitor](image2.jpg)
+![alt text](image-2.png)
 
 ETW Provider metadata can also be viewed through the EtwExplorer project.
 
-![EtwExplorer](image3.jpg)
+![alt text](image-3.png)
+
+![alt text](image-4.png)
 
 ## Useful Providers
 
