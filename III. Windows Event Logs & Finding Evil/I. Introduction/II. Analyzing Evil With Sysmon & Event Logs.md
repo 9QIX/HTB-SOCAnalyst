@@ -188,6 +188,8 @@ SHA256: 51F2305DCF385056C68F7CCF5B1B3B9304865CEF1257947D4AD6EF5FAD2E3B13
 cd C:\Tools\PSInject
 ```
 
+- Use `Process Hacker` the see the PID of spoolsv.exe
+
 ```pwsh
 powershell -ep bypass
 Import-Module .\Invoke-PSInject.ps1
