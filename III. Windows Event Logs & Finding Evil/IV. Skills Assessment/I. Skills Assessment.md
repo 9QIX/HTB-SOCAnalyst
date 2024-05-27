@@ -44,23 +44,17 @@ Answer the question(s) below to complete this Section and earn cubes!
 
 ### Question 4
 
-RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
-
 +2 By examining the logs located in the `C:\Logs\Dump` directory, determine the process that performed an LSASS dump. Enter the process name as your answer.
 
 **Answer format:** `_.exe`
 
 ### Question 5
 
-RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
-
 +1 By examining the logs located in the `C:\Logs\Dump` directory, determine if an ill-intended login took place after the LSASS dump.
 
 **Answer format:** Yes or No
 
 ### Question 6
-
-RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
 
 +2 By examining the logs located in the `C:\Logs\StrangePPID` directory, determine a process that was used to temporarily execute code based on a strange parent-child relationship. Enter the process name as your answer.
 
