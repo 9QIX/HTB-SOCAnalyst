@@ -43,9 +43,9 @@ Answer the question(s) below to complete this Section and earn cubes!
 **Answer format:** `_.exe`
 
 1. Open saved `.evtx` file from `C:\Logs\PowershellExec`.
-2. Filter `Event ID 7` and find `clr.dll`
+2. Filter `Event ID 8` and find `Calculator.exe`
 3. Check for `Image:` part.
-4. Answer: `Calculator.exe`
+4. Answer: `rundll32.exe`
 
 ### Question 4
 
