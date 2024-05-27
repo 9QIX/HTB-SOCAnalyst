@@ -20,6 +20,11 @@ Answer the question(s) below to complete this Section and earn cubes!
 
 **Answer format:** `_.exe`
 
+1. Open saved `.evtx` file from `C:\Logs\DLLHijack`.
+2. Filter `wininet.dll`
+3. Check for `Image:` part.
+4. Answer: `Dism.exe`
+
 ### Question 2
 
 RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
