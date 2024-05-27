@@ -42,6 +42,11 @@ Answer the question(s) below to complete this Section and earn cubes!
 
 **Answer format:** `_.exe`
 
+1. Open saved `.evtx` file from `C:\Logs\PowershellExec`.
+2. Filter `Event ID 7` and find `clr.dll`
+3. Check for `Image:` part.
+4. Answer: `Calculator.exe`
+
 ### Question 4
 
 +2 By examining the logs located in the `C:\Logs\Dump` directory, determine the process that performed an LSASS dump. Enter the process name as your answer.
