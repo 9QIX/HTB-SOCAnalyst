@@ -27,15 +27,16 @@ Answer the question(s) below to complete this Section and earn cubes!
 
 ### Question 2
 
-RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
-
 +2 By examining the logs located in the `C:\Logs\PowershellExec` directory, determine the process that executed unmanaged PowerShell code. Enter the process name as your answer.
 
 **Answer format:** `_.exe`
 
-### Question 3
+1. Open saved `.evtx` file from `C:\Logs\PowershellExec`.
+2. Filter `clr.dll`
+3. Check for `Image:` part.
+4. Answer: `Calculator.exe`
 
-RDP to with user "Administrator" and password `HTB_@cad3my_lab_W1n10_r00t!@0`
+### Question 3
 
 +3 By examining the logs located in the `C:\Logs\PowershellExec` directory, determine the process that injected into the process that executed unmanaged PowerShell code. Enter the process name as your answer.
 
