@@ -21,7 +21,7 @@ Answer the question(s) below to complete this Section and earn cubes!
 **Answer format:** `_.exe`
 
 1. Open saved `.evtx` file from `C:\Logs\DLLHijack`.
-2. Filter `wininet.dll`
+2. Filter `Event ID 7` and find `wininet.dll`
 3. Check for `Image:` part.
 4. Answer: `Dism.exe`
 
@@ -32,7 +32,7 @@ Answer the question(s) below to complete this Section and earn cubes!
 **Answer format:** `_.exe`
 
 1. Open saved `.evtx` file from `C:\Logs\PowershellExec`.
-2. Filter `clr.dll`
+2. Filter `Event ID 7` and find `clr.dll`
 3. Check for `Image:` part.
 4. Answer: `Calculator.exe`
 
