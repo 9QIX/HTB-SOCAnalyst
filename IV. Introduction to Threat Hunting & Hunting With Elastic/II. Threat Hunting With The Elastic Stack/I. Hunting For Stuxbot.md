@@ -257,4 +257,56 @@ process.name:"default.exe"
 
 #### Hunt 17
 
-Indeed, it has been executed – we can instantly discern that the executable initiated DNS queries for Ngrok and established connections with the C2 IP addresses. It also uploaded two files "svchost.exe" and "SharpHound.exe". SharpHound is a recognized tool for diagramming Active Directory and identifying attack paths for escalation. As for svchost.exe, we're uns
+Indeed, it has been executed – we can instantly discern that the executable initiated DNS queries for Ngrok and established connections with the C2 IP addresses. It also uploaded two files "svchost.exe" and "SharpHound.exe". SharpHound is a recognized tool for diagramming Active Directory and identifying attack paths for escalation. As for svchost.exe, we're unsure – is it another malicious agent? The name implies it attempts to mimic the legitimate svchost file, which is part of the Windows Operating System.
+
+If we scroll up there's further activity from this executable, including the uploading of "payload.exe", a VBS file, and repeated uploads of "svchost.exe".
+
+At this juncture, we're left with one question: did SharpHound execute? Did the attacker acquire information about Active Directory? We can investigate this with the following query (since it was an on-disk executable file).
+
+Related field: process.name
+
+```
+process.name:"SharpHound.exe"
+```
+
+#### Hunt 18
+
+Indeed, the tool appears to have been executed twice, roughly 2 minutes apart from each other.
+
+It's vital to note that Sysmon has flagged "default.exe" with a file hash (process.hash.sha256 field) that aligns with one found in the Threat Intel report. This leads us to question whether this executable has been detected on other devices within the environment. Let's conduct a broad search. Note that the host.hostname field was added as a column.
+
+Related field: process.hash.sha256
+
+```
+process.hash.sha256:018d37cbd3878258c29db3bc3f2988b6ae688843801b9abc28e6151141ab66d4
+```
+
+#### Hunt 29
+
+Files with this hash value have been found on WS001 and PKI, indicating that the attacker has also breached the PKI server at a minimum. It also appears that a backdoor file has been placed under the profile of user "svc-sql1", suggesting that this user's account is likely compromised.
+
+Expanding the first instance of "default.exe" execution on PKI, we notice that the parent process was "PSEXESVC", a component of PSExec from SysInternals – a tool often used for executing commands remotely, frequently utilized for lateral movement in Active Directory breaches.
+
+#### Hunt 20
+
+Further down the same log, we notice "svc-sql1" in the user.name field, thereby confirming the compromise of this user.
+
+How was the password of "svc-sql1" compromised? The only plausible explanation from the available data so far is potentially the earlier uploaded PowerShell script, seemingly designed for Password Bruteforcing. We know that this was uploaded on WS001, so we can check for any successful or failed password attempts from that machine, excluding those for Bob, the user of that machine (and the machine itself).
+
+Related fields: winlog.event_id or event.code, winlog.event_data.LogonType, and source.ip
+
+```
+(event.code:4624 OR event.code:4625) AND winlog.event_data.LogonType:3 AND source.ip:192.168.28.130
+```
+
+#### Hunt 21
+
+The results are quite intriguing – two failed attempts for the administrator account, roughly around the time when the initial suspicious activity was detected. Subsequently, there were numerous successful logon attempts for "svc-sql1". It appears they attempted to crack the administrator's password but failed. However, two days later on the 28th, we observe successful attempts with svc-sql1.
+
+At this stage, we have amassed a significant amount of information to present and initiate a comprehensive incident response, in accordance with company policies.
+
+Please allow 3-5 minutes for Kibana to become available after spawning the target of the questions below.
+
+```
+
+```
