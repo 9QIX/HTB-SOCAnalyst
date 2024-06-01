@@ -134,4 +134,127 @@ event.code:11 AND file.name:invoice.one\*
 
 It's relatively easy to deduce that the machine which reported the "invoice.one" file has the hostname WS001 (check the host.hostname or host.name fields of the Sysmon Event ID 11 event we were just looking at) and an IP address of 192.168.28.130, which can be confirmed by checking any network connection event (Sysmon Event ID 3) from this machine (execute the following query event.code:3 AND host.hostname:WS001 and check the source.ip field).
 
-If we inspect network connections leveraging Sysmon Event ID 3 (Network connection) around the time this file
+If we inspect network connections leveraging Sysmon Event ID 3 (Network connection) around the time this file was downloaded, we'll find that Sysmon has no entries. This is a common configuration to avoid capturing network connections created by browsers, which could lead to an overwhelming volume of logs, particularly those related to our email provider.
+
+This is where Zeek logs prove invaluable. We should filter and examine the DNS queries that Zeek has captured from WS001 during the interval from 22:05:00 to 22:05:48, when the file was downloaded.
+
+Our Zeek query will search for a source IP matching 192.168.28.130, and since we're querying about DNS queries, we'll only pick logs that have something in the dns.question.name field. Note that this will return a lot of common noise, like google.com, etc., so it's necessary to filter that out. Here's the query and some filters.
+
+Related fields: source.ip and dns.question.name
+
+```
+source.ip:192.168.28.130 AND dns.question.name:*
+```
+
+#### Hunt 3
+
+We can easily identify major sources of noise by looking at the most common values that Kibana has detected (click on a field as follows), and then apply a filter on the known noisy ones.
+
+#### Hunt 23
+
+As part of our search process, since we're interested in DNS names, we'd like to display only the dns.question.name field in the result table. Please note the specified time March 26th 2023 @ 22:05:00 to March 26th 2023 @ 22:05:48.
+
+#### Hunt 24 Hunt 4
+
+Scrolling down the table of entries, we observe the following activities.
+
+#### Hunt 5
+
+From this data, we infer that the user accessed Google Mail, followed by interaction with "file.io", a known hosting provider. Subsequently, Microsoft Defender SmartScreen initiated a file scan, typically triggered when a file is downloaded via Microsoft Edge. Expanding the log entry for file.io reveals the returned IP addresses (dns.answers.data or dns.resolved_ip or zeek.dns.answers fields) as follows.
+
+34.197.10.85, 3.213.216.16
+
+Now, if we run a search for any connections to these IP addresses during the same timeframe as the DNS query, it leads to the following findings.
+
+#### Hunt 6
+
+This information corroborates that a user, Bob, successfully downloaded the file "invoice.one" from the hosting provider "file.io".
+
+At this juncture, we have two choices: we can either cross-reference the data with the Threat Intel report to identify overlapping information within our environment, or we can conduct an Incident Response (IR)-like investigation to trace the sequence of events post the OneNote file download. We choose to proceed with the latter approach, tracking the subsequent activities.
+
+Hypothetically, if "invoice.one" was accessed, it would be opened with the OneNote application. So, the following query will flag the event, if it transpired. Note: The time frame we specified previously should be removed, setting it to, say, 15 years again. The dns.question.name column should also be removed.
+
+#### Hunt 25
+
+Related fields: winlog.event_id or event.code and process.command_line
+
+```
+event.code:1 AND process.command_line:*invoice.one*
+```
+
+#### Hunt 7
+
+Indeed, we find that the OneNote file was accessed shortly after its download, with a delay of roughly 6 seconds. Now, with OneNote.exe in operation and the file open, we can speculate that it either contains a malicious link or a malevolent file attachment. In either case, OneNote.exe will initiate either a browser or a malicious file. Therefore, we should scrutinize any new processes where OneNote.exe is the parent process. The corresponding query is the following. Sysmon Event ID 1 (Process creation) is utilized.
+
+Related fields: winlog.event_id or event.code and process.parent.name
+
+```
+event.code:1 AND process.parent.name:"ONENOTE.EXE"
+```
+
+#### Hunt 8
+
+The results of this query present three hits. However, one of these (the bottom one) falls outside the relevant time frame and can be dismissed. Evaluating the other two results:
+
+- The middle entry documents (when expanded) a new process, OneNoteM.exe, which is a component of OneNote and assists in launching files.
+- The top entry reveals "cmd.exe" in operation, executing a file named "invoice.bat". Here is the view upon expanding the log.
+
+#### Hunt 9
+
+Now we can establish a connection between "OneNote.exe", the suspicious "invoice.one", and the execution of "cmd.exe" that initiates "invoice.bat" from a temporary location (highly likely due to its attachment inside the OneNote file). The question now is, has this batch script instigated anything else? Let's search if a parent process with a command line argument pointing to the batch file has spawned any child processes with the following query.
+
+Related fields: winlog.event_id or event.code and process.parent.command_line
+
+```
+event.code:1 AND process.parent.command_line:*invoice.bat*
+```
+
+#### Hunt 10
+
+This query returns a single result: the initiation of PowerShell, and the arguments passed to it appear conspicuously suspicious (note that we have added process.name, process.args, and process.pid as columns)! A command to download and execute content from Pastebin, an open text hosting provider! We can try to access and see if the content, which the script attempted to download, is still available (by default, it won't expire!).
+
+#### Hunt 28
+
+Indeed, it is! This is referred to in the Threat Intelligence report, stating that a PowerShell Script from Pastebin was downloaded.
+
+To figure out what PowerShell did, we can filter based on the process ID and name to get an overview of activities. Note that we have added the event.code field as a column.
+
+Related fields: process.pid and process.name
+
+```
+process.pid:"9944" and process.name:"powershell.exe"
+```
+
+#### Hunt 12
+
+Immediately, we can observe intriguing output indicating file creation, attempted network connections, and some DNS resolutions leverarging Sysmon Event ID 22 (DNSEvent). By adding some additional informative fields (file.path, dns.question.name, and destination.ip ) as columns to that view, we can expand it.
+
+#### Hunt 13
+
+Now, this presents us with rich data on the activities. Ngrok was likely employed as C2 (to mask malicious traffic to a known domain). If we examine the connections above the DNS resolution for Ngrok, it points to the destination IP Address 443, implying that the traffic was encrypted.
+
+The dropped EXE is likely intended for persistence. Its distinctive name should facilitate determining whether it was ever executed. It's important to note the timestamps – there is some time lapse between different activities, suggesting it's less likely to have been scripted but perhaps an actual human interaction took place (unless random sleep occurred between the executed actions). The final actions that this process points to are a DNS query for DC1 and connections to it.
+
+Let's review Zeek data for information on the destination IP address 18.158.249.75 that we just discovered. Note that the source.ip, destination.ip, and destination.port fields were added as columns.
+
+#### Hunt 14
+
+Intriguingly, the activity seems to have extended into the subsequent day. The reason for the termination of the activity is unclear... Was there a change in C2 IP? Or did the attack simply halt? Upon inspecting DNS queries for "ngrok.io", we find that the returned IP (dns.answers.data) has indeed altered. Note that the dns.answers.data field was added as a column.
+
+#### Hunt 15
+
+The newly discovered IP also indicates that connections continued consistently over the following days.
+
+#### Hunt 16
+
+Thus, it's apparent that there is sustained network activity, and we can deduce that the C2 has been accessed continually. Now, as for the earlier uploaded executable file "default.exe" – did that ever execute? By probing the Sysmon logs for a process with that name, we can ascertain this. Note that the process.name, process.args, event.code, file.path, destination.ip, and dns.question.name fields were added as columns.
+
+Related field: process.name
+
+```
+process.name:"default.exe"
+```
+
+#### Hunt 17
+
+Indeed, it has been executed – we can instantly discern that the executable initiated DNS queries for Ngrok and established connections with the C2 IP addresses. It also uploaded two files "svchost.exe" and "SharpHound.exe". SharpHound is a recognized tool for diagramming Active Directory and identifying attack paths for escalation. As for svchost.exe, we're uns
