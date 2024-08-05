@@ -1,5 +1,5 @@
 # SOC Analyst Job Role Path 🛡️🔍
-
+ 
 Welcome to the **SOC Analyst Job Role Path**! This path is designed for newcomers to information security who aspire to become professional SOC analysts. It covers core concepts of security monitoring and analysis, and provides an in-depth understanding of specialized tools, attack tactics, and methodologies used by adversaries. Through a combination of theoretical knowledge and practical exercises, students will learn to navigate all stages of security analysis, from traffic analysis and SIEM monitoring to DFIR activities and reporting. By the end of this path, you will have the skills and mindset necessary to monitor enterprise-level infrastructure and detect intrusions at an intermediate level.
 
 > **Prerequisite:** The [SOC Analyst Prerequisites](https://github.com/9QIX/HTB-SOCAnalystPrerequisites) skill path is recommended before starting this path.
