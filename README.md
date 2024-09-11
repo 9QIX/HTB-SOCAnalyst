@@ -5,7 +5,7 @@ Welcome to the **SOC Analyst Job Role Path**! This path is designed for newcomer
 > **Prerequisite:** The [SOC Analyst Prerequisites](https://github.com/9QIX/HTB-SOCAnalystPrerequisites) skill path is recommended before starting this path.
 
 ## Modules Overview 📚
-
+ 
 ### Incident Handling Process 🛠️🔒
 
 - **Difficulty:** Fundamental
